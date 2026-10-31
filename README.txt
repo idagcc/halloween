@@ -7,7 +7,7 @@ are built into that one file. Copy index.html to the event computer by USB.
 
 AT YOUR EVENT
 Connect the event computer to your 4K TV. Set the display to 3840 × 2160
-and browser zoom to 100%. Press F or the fullscreen button.
+and browser zoom to 100%. Use the browser’s fullscreen menu. The Mac app stays fullscreen automatically.
 The entire game stays in a strict 16:9 frame. Other window shapes show
 centered dark bars without stretching or cropping the game.
 Enter a first name and press “Play” Only the first word entered is used. A touch-friendly on-screen
@@ -25,7 +25,7 @@ SETTINGS
 Every round lasts 60 seconds. Choose Big or Extra big pumpkins, Gentle
 or Speedy pace, and the full play area or lower half for easier reach.
 The defaults are Big pumpkins and Gentle pace.
-Use the speaker button to toggle the generated sound effects.
+Use F2 → Settings & music → Game audio to mute or enable audio.
 
 TV / SOFT BALL INPUT
 A regular TV displays the game but does not detect hands or balls.
@@ -35,7 +35,7 @@ and a display/setup approved for that activity.
 
 PAUSING
 Use the pause button or Escape. Switching away from the game pauses it.
-The timer resumes from the same point. Fullscreen is a separate F shortcut.
+The timer resumes from the same point. The Mac app stays fullscreen; Command–Q quits.
 
 SCORES AND PRIVACY
 The end screen shows the score, top five leaderboard, and current player rank.
@@ -59,4 +59,11 @@ then Delete all scores. This removes all scores on that device and cannot be und
 Settings offers Halloween music: Off, Soft (default), or Normal. The original
 minor-key tune loops continuously on Home, during rounds, while paused, and on
 results, and works offline. The Mac app starts music when opened; browsers may
-require a first tap or key press. The speaker button mutes both music and sound effects.
+require a first tap or key press. Settings → Game audio mutes both music and sound effects.
+
+ADMIN AND EXPORT
+Press F2 (or Fn–F2 on a Mac keyboard) to open Admin. A running round pauses.
+Choose Export leaderboard (CSV), then choose where to save it. CSV files open
+in Excel and include all saved scores (up to 50), names, ranks, round lengths,
+and UTC dates. Exporting does not delete scores. The Home trophy also offers export.
+The sound and fullscreen buttons have been removed. Audio controls are in Settings.

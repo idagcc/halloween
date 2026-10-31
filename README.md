@@ -4,16 +4,17 @@ A fully offline Halloween carnival game for kids, built for an 86-inch 4K intera
 
 ## Run the Mac app
 
-Download **Pumpkin-Pop-Mac.zip** from this repository's Releases, unzip it, and open **Pumpkin Pop.app**. You can move the app into Applications. It includes everything it needs and opens fullscreen automatically. No server, browser, account, or internet connection is required.
+Download [Pumpkin-Pop-Mac.zip](https://github.com/idagcc/halloween/raw/refs/heads/main/dist/Pumpkin-Pop-Mac.zip), unzip it, and open **Pumpkin Pop.app**. You can move the app into Applications. It includes everything it needs and opens fullscreen automatically. No server, browser, account, or internet connection is required.
 
 The app supports Apple Silicon and Intel Macs running macOS 13 or later. The development build is ad-hoc signed, not Apple notarized; macOS may require approval in Privacy & Security when opening a downloaded copy.
 
 ## Display and controls
 
 - The game always stays **16:9**. Fullscreen on a 3840 × 2160 display fills the screen; other display shapes have dark bars.
-- **F**, the in-game fullscreen button, or **Control–Command–F** toggles native fullscreen.
+- The Mac app stays fullscreen. The fullscreen button, toggle shortcut, and windowed launch mode have been removed.
+- **F2** opens the admin panel (use **Fn–F2** if the keyboard uses F2 for brightness). Opening Admin pauses a round.
+- Admin offers settings, audio/music, leaderboard export, and score clearing.
 - **Escape** pauses/resumes gameplay. **Command–Q** quits the app.
-- In windowed mode, resize the window with its fixed 16:9 content ratio. Move it to the event display and return to fullscreen.
 - Grown-up settings offer Big/Extra big targets, Gentle/Speedy pace, and lower-half-only targets for easy reach.
 - A regular TV cannot detect hits. Hands and soft balls require a compatible touchscreen overlay or interactive sensor that supplies touch or mouse input.
 
@@ -29,13 +30,7 @@ bash scripts/build-mac.sh
 open "dist/Pumpkin Pop.app"
 ```
 
-The build produces a universal `.app` and `dist/Pumpkin-Pop-Mac.zip`, generates its Dock icon locally, and verifies the ad-hoc signature. It does not download dependencies. To launch without automatically entering fullscreen during development:
-
-```sh
-open "dist/Pumpkin Pop.app" --args --windowed
-```
-
-`mac/PumpkinPop.swift` is the native AppKit/WebKit shell. `index.html` is the shared, self-contained game. The standalone HTML still works by opening it directly in a browser. GitHub Actions also builds a downloadable app artifact after pushes.
+The build produces a universal `.app` and `dist/Pumpkin-Pop-Mac.zip`, generates its Dock icon locally, and verifies the ad-hoc signature. It does not download dependencies. `mac/PumpkinPop.swift` is the native AppKit/WebKit shell. `index.html` is the shared, self-contained game. The standalone HTML still works by opening it directly in a browser. GitHub Actions also builds a downloadable app artifact after pushes.
 
 ## Apple signing and notarization
 
@@ -71,4 +66,11 @@ then Delete all scores. This removes all scores on that device and cannot be und
 Settings offers Halloween music: Off, Soft (default), or Normal. The original
 minor-key tune loops continuously on Home, during rounds, while paused, and on
 results, and works offline. The Mac app starts music when opened; browsers may
-require a first tap or key press. The speaker button mutes both music and sound effects.
+require a first tap or key press. Settings → Game audio mutes both music and sound effects.
+
+EXPORT AND ADMIN
+Press F2 (or Fn–F2) to open Admin. Choose Export leaderboard (CSV), then
+choose a save location in the Mac save dialog. The file includes every saved
+score (up to 50), with rank, name, score, round length, and UTC date.
+Exporting preserves the leaderboard. The browser version downloads the CSV.
+The Home trophy button also offers export. Admin is a keyboard shortcut, not a login.

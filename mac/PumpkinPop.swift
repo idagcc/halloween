@@ -1,9 +1,18 @@
 import AppKit
 import WebKit
+import UniformTypeIdentifiers
 
 // The native shell owns the window. The bundled game owns its fixed 16:9 stage.
 final class GameWebView: WKWebView {
     override func menu(for event: NSEvent) -> NSMenu? { nil }
+}
+
+// Fullscreen controls and Escape cannot take the event app out of fullscreen.
+final class GameWindow: NSWindow {
+    override func toggleFullScreen(_ sender: Any?) {
+        if !styleMask.contains(.fullScreen) { super.toggleFullScreen(sender) }
+    }
+    override func cancelOperation(_ sender: Any?) {}
 }
 
 @MainActor
@@ -12,7 +21,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
     private var webView: GameWebView!
     private var hasLaunched = false
     private var gameURL: URL!
-    private let windowed = CommandLine.arguments.contains("--windowed")
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.regular)
@@ -24,11 +32,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
         gameURL = bundledGame
 
         let controller = WKUserContentController()
-        controller.add(self, name: "pumpkinFullscreen")
+        controller.add(self, name: "pumpkinExport")
         controller.addUserScript(WKUserScript(source: """
             window.pumpkinNative = {
-                isFullscreen: false,
-                toggleFullscreen() { window.webkit.messageHandlers.pumpkinFullscreen.postMessage('toggle'); }
+                exportLeaderboard(csv) { window.webkit.messageHandlers.pumpkinExport.postMessage(csv); }
             };
             """, injectionTime: .atDocumentStart, forMainFrameOnly: true))
         let configuration = WKWebViewConfiguration()
@@ -42,7 +49,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
         webView.allowsMagnification = false
         webView.autoresizingMask = [.width, .height]
 
-        window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1280, height: 720),
+        window = GameWindow(contentRect: NSRect(x: 0, y: 0, width: 1280, height: 720),
                           styleMask: [.titled, .closable, .miniaturizable, .resizable],
                           backing: .buffered, defer: false)
         window.title = "Pumpkin Pop!"
@@ -53,6 +60,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
         window.isReleasedWhenClosed = false
         window.delegate = self
         window.contentView = webView
+        window.standardWindowButton(.zoomButton)?.isHidden = true
+        window.standardWindowButton(.miniaturizeButton)?.isHidden = true
         window.center()
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
@@ -81,30 +90,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
         appMenu.addItem(withTitle: "Quit Pumpkin Pop", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         appItem.submenu = appMenu
         main.addItem(appItem)
-        let gameItem = NSMenuItem()
-        let gameMenu = NSMenu(title: "Game")
-        let fullscreen = NSMenuItem(title: "Toggle Fullscreen", action: #selector(toggleFullscreen(_:)), keyEquivalent: "f")
-        fullscreen.keyEquivalentModifierMask = [.command, .control]
-        fullscreen.target = self
-        gameMenu.addItem(fullscreen)
-        gameItem.submenu = gameMenu
-        main.addItem(gameItem)
-        let windowItem = NSMenuItem()
-        let windowMenu = NSMenu(title: "Window")
-        windowMenu.addItem(withTitle: "Minimize", action: #selector(NSWindow.performMiniaturize(_:)), keyEquivalent: "m")
-        windowItem.submenu = windowMenu
-        main.addItem(windowItem)
         NSApp.mainMenu = main
-        NSApp.windowsMenu = windowMenu
     }
 
-    @objc private func toggleFullscreen(_ sender: Any?) { window.toggleFullScreen(sender) }
-
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        guard message.name == "pumpkinFullscreen", message.frameInfo.isMainFrame,
+        guard message.name == "pumpkinExport", message.frameInfo.isMainFrame,
               message.frameInfo.request.url?.standardizedFileURL == gameURL.standardizedFileURL,
-              message.body as? String == "toggle" else { return }
-        toggleFullscreen(nil)
+              let csv = message.body as? String, csv.utf8.count <= 1_000_000 else { return }
+        let panel = NSSavePanel()
+        panel.allowedContentTypes = [.commaSeparatedText]
+        panel.nameFieldStringValue = "Pumpkin-Pop-Leaderboard-" + String(ISO8601DateFormatter().string(from: Date()).prefix(10)) + ".csv"
+        panel.canCreateDirectories = true
+        panel.beginSheetModal(for: window) { [weak self] response in
+            guard let self else { return }
+            var status = "cancelled"
+            if response == .OK, let url = panel.url {
+                do { try csv.write(to: url, atomically: true, encoding: .utf8); status = "saved" }
+                catch { status = "error" }
+            }
+            self.webView.evaluateJavaScript("document.dispatchEvent(new CustomEvent('pumpkinexportresult',{detail:'\(status)'}))", completionHandler: nil)
+        }
     }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
@@ -119,14 +124,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        updateFullscreenState()
         guard !hasLaunched else { return }
         hasLaunched = true
-        if !windowed {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
-                guard let self, !self.window.styleMask.contains(.fullScreen) else { return }
-                self.window.toggleFullScreen(nil)
-            }
+        ensureFullscreen()
+    }
+
+    private func ensureFullscreen() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+            guard let self, !self.window.styleMask.contains(.fullScreen) else { return }
+            self.window.toggleFullScreen(nil)
         }
     }
 
@@ -138,18 +144,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
         showError("The game stopped unexpectedly. Close and reopen Pumpkin Pop to play again. Saved scores remain on this Mac.")
     }
 
-    private func updateFullscreenState() {
-        let isFullscreen = window.styleMask.contains(.fullScreen)
-        webView.evaluateJavaScript("""
-            if (window.pumpkinNative) {
-                window.pumpkinNative.isFullscreen = \(isFullscreen);
-                document.dispatchEvent(new Event('pumpkinfullscreenchange'));
-            }
-            """, completionHandler: nil)
-    }
-
-    func windowDidEnterFullScreen(_ notification: Notification) { updateFullscreenState() }
-    func windowDidExitFullScreen(_ notification: Notification) { updateFullscreenState() }
+    func windowDidExitFullScreen(_ notification: Notification) { ensureFullscreen() }
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         window.makeKeyAndOrderFront(nil)
