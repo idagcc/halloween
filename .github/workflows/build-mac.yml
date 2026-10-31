@@ -13,6 +13,7 @@ jobs:
         with:
           node-version: '22'
       - run: python3 scripts/check-source.py
+      - run: bash -n scripts/build-mac.sh scripts/notarize-mac.sh
       - run: bash scripts/build-mac.sh
       - uses: actions/upload-artifact@v4
         with:

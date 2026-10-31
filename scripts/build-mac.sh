@@ -8,6 +8,7 @@ if [[ -z "${DEVELOPER_DIR:-}" && -d /Applications/Xcode.app/Contents/Developer ]
   export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
 fi
 SDK_PATH="$(xcrun --sdk macosx --show-sdk-path)"
+SIGNING_IDENTITY="${MAC_SIGNING_IDENTITY:--}"
 APP_PATH="$PROJECT_ROOT/dist/Pumpkin Pop.app"
 WORK_PATH="$PROJECT_ROOT/.build/mac"
 mkdir -p "$WORK_PATH" "$APP_PATH/Contents/MacOS" "$APP_PATH/Contents/Resources/Game"
@@ -32,7 +33,11 @@ for pixels in 16 32 128 256 512; do
 done
 iconutil -c icns "$ICONSET_PATH" -o "$APP_PATH/Contents/Resources/AppIcon.icns"
 plutil -lint "$APP_PATH/Contents/Info.plist"
-codesign --force --sign - --options runtime "$APP_PATH"
+if [[ "$SIGNING_IDENTITY" == "-" ]]; then
+  codesign --force --sign - --options runtime "$APP_PATH"
+else
+  codesign --force --sign "$SIGNING_IDENTITY" --options runtime --timestamp "$APP_PATH"
+fi
 codesign --verify --deep --strict "$APP_PATH"
 ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" "$PROJECT_ROOT/dist/Pumpkin-Pop-Mac.zip"
 printf 'Built universal Mac app: %s\n' "$APP_PATH"

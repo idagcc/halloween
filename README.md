@@ -36,3 +36,26 @@ open "dist/Pumpkin Pop.app" --args --windowed
 ```
 
 `mac/PumpkinPop.swift` is the native AppKit/WebKit shell. `index.html` is the shared, self-contained game. The standalone HTML still works by opening it directly in a browser. GitHub Actions also builds a downloadable app artifact after pushes.
+
+## Apple signing and notarization
+
+Notarization requires a **Developer ID Application** certificate and its private key in this Mac's Keychain, from an Apple Developer Program team. An **Apple Development** certificate cannot replace it. Create or install the certificate through Xcode or your Apple Developer account.
+
+Store notarization credentials locally with an interactive prompt:
+
+```sh
+xcrun notarytool store-credentials pumpkin-pop
+```
+
+Enter your Apple ID, developer Team ID, and an app-specific password when prompted. Do not put passwords, API keys, or signing certificates in this repository or chat.
+
+Rebuild with the exact Developer ID Application identity shown by `security find-identity -v -p codesigning`, then submit:
+
+```sh
+MAC_SIGNING_IDENTITY='Developer ID Application: Your Developer Name (TEAMID)' bash scripts/build-mac.sh
+bash scripts/notarize-mac.sh pumpkin-pop
+```
+
+The signing build enables hardened runtime and a secure timestamp. The notarization script requires a Developer ID signature, submits the archive to Apple, waits for acceptance, staples and validates the ticket, and checks Gatekeeper before repackaging the ZIP and updating its checksum. Submission reports stay in the ignored `.build/notarization/` folder. If the wait times out, check the saved submission ID with `notarytool info`/`wait` before submitting again.
+
+Only publish a build as notarized after this script reports success. The existing 1.0.0 release remains ad-hoc signed until it is explicitly replaced with a verified notarized build. The regular GitHub Actions build remains ad-hoc signed and does not have access to your Apple credentials.
