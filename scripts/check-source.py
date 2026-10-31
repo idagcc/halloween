@@ -13,7 +13,7 @@ assert all(value.startswith(('#', 'data:')) for value in references), 'External 
 assert not re.search(r'\b(fetch|XMLHttpRequest|WebSocket|sendBeacon)\s*\(', script), 'Network API in game'
 assert 'aspect-ratio:16 / 9' in html, 'Missing 16:9 stage'
 assert 'window.pumpkinNative.exportLeaderboard(csv)' in script, 'Missing native export bridge'
-assert 'id="sound-toggle"' not in html and 'id="fullscreen"' not in html, 'Removed controls reintroduced'
+assert 'id="sound-toggle"' not in html and 'id="fullscreen"' not in html and 'pause-button' not in html, 'Removed controls reintroduced'
 with (root / 'mac/Info.plist').open('rb') as stream:
     info = plistlib.load(stream)
 assert info['CFBundleExecutable'] == 'PumpkinPop'

@@ -34,7 +34,7 @@ or mouse events to the computer. Ball play requires a compatible sensor
 and a display/setup approved for that activity.
 
 PAUSING
-Use the pause button or Escape. Switching away from the game pauses it.
+Use Escape or F2 to pause. Switching away from the game pauses it.
 The timer resumes from the same point. The Mac app stays fullscreen; Command–Q quits.
 
 SCORES AND PRIVACY
@@ -67,3 +67,10 @@ Choose Export leaderboard (CSV), then choose where to save it. CSV files open
 in Excel and include all saved scores (up to 50), names, ranks, round lengths,
 and UTC dates. Exporting does not delete scores. The Home trophy also offers export.
 The sound and fullscreen buttons have been removed. Audio controls are in Settings.
+
+IDLE RETURN
+The pause button has been removed. Escape and F2 remain available for staff.
+After one minute without touch, mouse movement/clicks, typing, or scrolling,
+the game returns to Home and clears the player name. Saved scores are kept.
+The idle timer also applies on results and admin screens. Automatic animations
+and round transitions do not reset it. Background music keeps playing.

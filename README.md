@@ -74,3 +74,10 @@ choose a save location in the Mac save dialog. The file includes every saved
 score (up to 50), with rank, name, score, round length, and UTC date.
 Exporting preserves the leaderboard. The browser version downloads the CSV.
 The Home trophy button also offers export. Admin is a keyboard shortcut, not a login.
+
+IDLE RETURN
+The pause button has been removed. Escape and F2 remain available for staff.
+After one minute without touch, mouse movement/clicks, typing, or scrolling,
+the game returns to Home and clears the player name. Saved scores are kept.
+The idle timer also applies on results and admin screens. Automatic animations
+and round transitions do not reset it. Background music keeps playing.
