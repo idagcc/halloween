@@ -62,3 +62,12 @@ Only publish a build as notarized after this script reports success. The existin
 
 The mouse pointer is hidden throughout the countdown and gameplay, including
 when a touchscreen sensor sends mouse clicks. It returns on pause and menus.
+
+LEADERBOARD AND MUSIC
+Scores are saved locally under the storage key pumpkin-pop-records. The Mac
+app and each browser keep separate scores; builds do not contain player data.
+To remove test scores, open the trophy button on Home, choose Clear leaderboard,
+then Delete all scores. This removes all scores on that device and cannot be undone.
+Settings offers Halloween music: Off, Soft (default), or Normal. The original
+minor-key tune plays during countdown and rounds, stops on pause and menus,
+and works offline. The speaker button mutes both music and sound effects.
