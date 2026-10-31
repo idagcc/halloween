@@ -69,5 +69,6 @@ app and each browser keep separate scores; builds do not contain player data.
 To remove test scores, open the trophy button on Home, choose Clear leaderboard,
 then Delete all scores. This removes all scores on that device and cannot be undone.
 Settings offers Halloween music: Off, Soft (default), or Normal. The original
-minor-key tune plays during countdown and rounds, stops on pause and menus,
-and works offline. The speaker button mutes both music and sound effects.
+minor-key tune loops continuously on Home, during rounds, while paused, and on
+results, and works offline. The Mac app starts music when opened; browsers may
+require a first tap or key press. The speaker button mutes both music and sound effects.
