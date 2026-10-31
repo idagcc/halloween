@@ -48,8 +48,8 @@ The moonlit carnival artwork was cleaned of static characters and is embedded
 in index.html. Pumpkins and ghosts appear only as interactive game targets.
 No external libraries, services, fonts, analytics, or network requests.
 
-The mouse pointer is hidden throughout the countdown and gameplay, including
-when a touchscreen sensor sends mouse clicks. It returns on pause and menus.
+The mouse pointer stays hidden on every game screen, including Home, countdown,
+gameplay, pause, results, and admin menus, even when a touchscreen sends mouse input.
 
 LEADERBOARD AND MUSIC
 Scores are saved locally under the storage key pumpkin-pop-records. The Mac

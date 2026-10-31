@@ -55,8 +55,8 @@ The signing build enables hardened runtime and a secure timestamp. The notarizat
 
 Only publish a build as notarized after this script reports success. The existing 1.0.0 release remains ad-hoc signed until it is explicitly replaced with a verified notarized build. The regular GitHub Actions build remains ad-hoc signed and does not have access to your Apple credentials.
 
-The mouse pointer is hidden throughout the countdown and gameplay, including
-when a touchscreen sensor sends mouse clicks. It returns on pause and menus.
+The mouse pointer stays hidden on every game screen, including Home, countdown,
+gameplay, pause, results, and admin menus, even when a touchscreen sends mouse input.
 
 LEADERBOARD AND MUSIC
 Scores are saved locally under the storage key pumpkin-pop-records. The Mac

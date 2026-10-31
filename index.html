@@ -52,8 +52,8 @@ body{background:#020a19}
 
 /* Keep the event screen focused on play. */
 .topbar{justify-content:flex-end;background:none}.join-card{margin-top:2cqw}.footer{justify-content:flex-end;gap:.8cqw;background:none}.settings-row small{display:none}
-/* Touchscreen overlays may report mouse input, so hide every cursor during rounds. */
-html.game-active,html.game-active *{cursor:none!important}
+/* Touchscreen overlays may report mouse input, so hide the cursor on every screen. */
+html,html *,html::before,html::after,html *::before,html *::after{cursor:none!important}
 </style>
 </head>
 <body>
@@ -104,7 +104,7 @@ html.game-active,html.game-active *{cursor:none!important}
  records = Array.isArray(records) ? records.filter(r=>r && typeof r.name==='string' && Number.isFinite(r.score) && r.score>=0 && [30,45,60].includes(r.duration)).slice(0,50) : [];
  let phase='home', player='', score=0,hits=0,golds=0,bestStreak=0,streak=0,lastHit=0,elapsed=0,lastFrame=0,nextSpawn=0,frame=0,countTimer=0;
  let targets=[], audioCtx,previousFocus,modalKind='',countValue=3,countContinuation,toastTimer;
- function setPhase(value){phase=value;document.documentElement.classList.toggle('game-active',value==='playing'||value==='countdown');syncMusic()}
+ function setPhase(value){phase=value;syncMusic()}
  const svg = (id,cls='') => `<svg class="${cls}" viewBox="0 0 ${id==='ghost'?'180 200':'300 300'}" aria-hidden="true"><use href="#${id}"/></svg>`;
  const escapeHTML = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  function initStars(){let seed=216;const random=()=>{seed=(seed*9301+49297)%233280;return seed/233280};for(let i=0;i<58;i++){const star=document.createElement('i');star.className='star';let size=random()*2+1;star.style.cssText=`left:${random()*100}%;top:${random()*90}%;width:${size}px;height:${size}px;animation-delay:-${random()*5}s`;document.querySelector('.stars').append(star)}}
