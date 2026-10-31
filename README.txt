@@ -47,3 +47,6 @@ and file location for the event. No information is sent anywhere.
 The moonlit carnival artwork was cleaned of static characters and is embedded
 in index.html. Pumpkins and ghosts appear only as interactive game targets.
 No external libraries, services, fonts, analytics, or network requests.
+
+The mouse pointer is hidden throughout the countdown and gameplay, including
+when a touchscreen sensor sends mouse clicks. It returns on pause and menus.

@@ -59,3 +59,6 @@ bash scripts/notarize-mac.sh pumpkin-pop
 The signing build enables hardened runtime and a secure timestamp. The notarization script requires a Developer ID signature, submits the archive to Apple, waits for acceptance, staples and validates the ticket, and checks Gatekeeper before repackaging the ZIP and updating its checksum. Submission reports stay in the ignored `.build/notarization/` folder. If the wait times out, check the saved submission ID with `notarytool info`/`wait` before submitting again.
 
 Only publish a build as notarized after this script reports success. The existing 1.0.0 release remains ad-hoc signed until it is explicitly replaced with a verified notarized build. The regular GitHub Actions build remains ad-hoc signed and does not have access to your Apple credentials.
+
+The mouse pointer is hidden throughout the countdown and gameplay, including
+when a touchscreen sensor sends mouse clicks. It returns on pause and menus.

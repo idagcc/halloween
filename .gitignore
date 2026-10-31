@@ -1,9 +1,14 @@
 .DS_Store
 .build/
-dist/
+dist/*
 *.zip
 *.mp4
 preview.jpg
 ratio-preview.jpg
 mac-preview.png
 client-preview/
+
+# Keep the distributable builds available in the repository.
+!Pumpkin Pop.zip
+!dist/Pumpkin-Pop-Mac.zip
+!dist/SHA256SUMS.txt
