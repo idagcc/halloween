@@ -1,0 +1,1 @@
+Built-in image generation edit: preserve the moonlit carnival, moon, Ferris wheel, tents, lights and paving. Remove all static ghosts, pumpkins, bats and spider; reconstruct the scenery behind them. See carnival-clean.png for the final scene.

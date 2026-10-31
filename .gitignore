@@ -1,0 +1,9 @@
+.DS_Store
+.build/
+dist/
+*.zip
+*.mp4
+preview.jpg
+ratio-preview.jpg
+mac-preview.png
+client-preview/
